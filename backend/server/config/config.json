@@ -1,0 +1,58 @@
+{
+    "local": {
+        "username": "root",
+        "password": "",
+        "database": "doc_user",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "jwt": "this is string for create JWT token",
+        "server_port": 8888,
+        "jwt_expiry_days": 365,
+        "email_conf": {
+            "service": "Gmail",
+            "port": 465,
+            "secure": true,
+            "auth": {
+                "user": "",
+                "pass": ""
+            }
+
+        }
+    },
+    "development": {
+        "username": "root",
+        "password": "",
+        "database": "doc_user",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "jwt": "this is string for create JWT token",
+        "server_port": 4319,
+        "jwt_expiry_days": 365,
+        "email_conf": {
+            "service": "Gmail",
+            "port": 465,
+            "secure": true,
+            "auth": {
+                "user": "",
+                "pass": ""
+            }
+
+        }
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false
+    }
+}

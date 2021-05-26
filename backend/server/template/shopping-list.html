@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>Shopping List</h1>
+<!-- <ul> -->
+
+    <table>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Ingredients
+            </th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.ingredient }}</td>
+
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="2">No data</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+<!-- </ul> -->
+
+</body>
+</html>
