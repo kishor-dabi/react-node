@@ -74,12 +74,9 @@ class Users extends React.PureComponent {
             { field: 'full_name', headerName: 'Full name', width: 220 },
             { field: 'email', headerName: 'Email', width: 200 },
             { field: 'phone_number', headerName: 'Phone Number', width: 150 },
-
+            { field: 'is_verified', headerName: 'Verified', width: 150 },
             {
-                field: 'age',
-                headerName: 'Age',
-                type: 'number',
-                width: 150,
+                field: 'age', headerName: 'Age', type: 'number', width: 150,
             },
 
         ];

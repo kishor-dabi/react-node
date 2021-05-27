@@ -1,3 +1,4 @@
+import actions from "redux-form/lib/actions";
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
@@ -7,7 +8,10 @@ const initialState = {
   userId: null,
   error: null,
   loading: false,
-  user: null
+  user: null,
+  isSignupSuccess:false,
+  successMessage: "",
+  isVerificationSuccess:false
 };
 
 const authStart = (state, action) => {
@@ -47,7 +51,8 @@ const authLogout = (state, action) => {
 const clearError = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false
+    loading: false,
+    successMessage: null,
   });
 };
 
@@ -55,24 +60,57 @@ const clearError = (state, action) => {
 const signupStart = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: true
+    loading: true,
+    isSignupSuccess:false
   });
 };
 
 const signupSuccess = (state, action) => {
   return updateObject(state, {
-    token: action.user.token,
+    // token: action.user.token,
     // username: action.user.username,
-    error: null,
+    successMessage: action.message,
     loading: false,
-    // user: action.user
+    isSignupSuccess: true
   });
 };
 
 const signupFail = (state, action) => {
+  // console.log("signup fail", action);
   return updateObject(state, {
     error: action.error,
-    loading: false
+    loading: false,
+    isSignupSuccess: false
+  });
+};
+
+
+const signupOTPverifyStart = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: true,
+    successMessage:null,
+    // isSignupSuccess:false
+  });
+};
+
+const signupOTPverifySuccess = (state, action) => {
+  console.log(action);
+  return updateObject(state, {
+
+    successMessage: action.message,
+    loading: false,
+    isSignupSuccess: false,
+    isVerificationSuccess: true
+  });
+};
+
+const signupOTPverifyFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false,
+    isSignupSuccess: false,
+    isVerificationSuccess:false
   });
 };
 
@@ -124,6 +162,12 @@ const reducer = (state = initialState, action) => {
       return getProfileSuccess(state, action);
     case actionTypes.GET_USER_PROFILE_FAIL:
       return getProfileFail(state, action);
+    case actionTypes.SIGNUP_OTPVERIFY_START:
+      return signupOTPverifyStart(state, action);
+    case actionTypes.SIGNUP_OTPVERIFY_SUCCESS:
+      return signupOTPverifySuccess(state, action);
+    case actionTypes.SIGNUP_OTPVERIFY_FAIL:
+      return signupOTPverifyFail(state, action);
           
     default:
       return state;

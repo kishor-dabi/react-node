@@ -33,16 +33,37 @@ export const signupStart = () => {
   };
 };
 
-export const signupSuccess = user => {
+export const signupSuccess = data => {
   return {
     type: actionTypes.SIGNUP_SUCCESS,
-    // user
+    message: data ? data.message :  "Success"
   };
 };
 
 export const signupFail = error => {
   return {
     type: actionTypes.SIGNUP_FAIL,
+    error: error.response ? (error.response.data ? error.response.data.message : "failed"): null
+  };
+};
+
+
+export const signupOTPverifyStart = () => {
+  return {
+    type: actionTypes.SIGNUP_OTPVERIFY_START
+  };
+};
+
+export const signupOTPverifySuccess = data => {
+  return {
+    type: actionTypes.SIGNUP_OTPVERIFY_SUCCESS,
+    message: data ? data.message : "Success"
+  };
+};
+
+export const signupOTPverifyFail = error => {
+  return {
+    type: actionTypes.SIGNUP_OTPVERIFY_FAIL,
     error: error.response ? (error.response.data ? error.response.data.message : "failed"): null
   };
 };
@@ -172,8 +193,11 @@ export const authSignup = (
       AxiosNoAUTH
       .post(`${conf.base_api_url}signup`, user  )
       .then(res => {
-        dispatch(signupSuccess({message:res.message}));
+        dispatch(signupSuccess({message:res.data.message}));
         // dispatch(checkAuthTimeout(3600));
+        setTimeout(() => {
+          dispatch(clearError());
+        }, 4000);
       })
       .catch(err => {
         dispatch(signupFail(err));
@@ -183,6 +207,32 @@ export const authSignup = (
       });
   };
 };
+
+export const signupOPTVerify = (data) => {
+  return dispatch => {
+    dispatch(signupOTPverifyStart());
+    AxiosNoAUTH
+      .post(`${conf.base_api_url}verify-signup-otp`, {
+        varification_for:1,
+        otp:data.otp,
+        email:data.email
+      })
+      .then(res => {
+        
+        dispatch(signupOTPverifySuccess({message:res.data.message}));
+        setTimeout(() => {
+          dispatch(clearError());
+        }, 4000);
+      })
+      .catch(err => {
+        dispatch(signupOTPverifyFail(err));
+        setTimeout(() => {
+          dispatch(clearError());
+        }, 4000);
+      });
+  };
+};
+
 
 
 export const getUserProfile = () => {

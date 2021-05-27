@@ -54,8 +54,8 @@ PrivateRoute.propTypes = {
 }
 
 const SuperAdminRoute = ({ component: Component, ...rest }) => {
-  const isAuthed = rest.isAuthenticated;
-  const user_type = rest.user ? (rest.user ? rest.user.user_type : null) : null;
+  let isAuthed = rest.isAuthenticated;
+  let user_type = rest.user ? (rest.user ? rest.user.user_type : null) : null;
 
 
   // console.log(isAuthed, "isAuthed", user_type , rest.user);

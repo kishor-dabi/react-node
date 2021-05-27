@@ -1,21 +1,37 @@
 import React from "react";
-import { Form, Icon, Button } from "antd";
+import { Form, Icon } from "antd";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import * as actions from "../store/actions/auth";
 import { Field, reduxForm } from "redux-form";
-// import Snackbar from 'material-ui/Snackbar'
 import { emailFieldValidation, Required, phoneNumberPattern } from "../validation"
-
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { Snackbar } from "@material-ui/core";
 // const FormItem = Form.Item;
 // const Option = Select.Option;
 
 class RegistrationForm extends React.Component {
-  state = {
-    confirmDirty: false,
-    error:"",
-    showError:false
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      confirmDirty: false,
+      error: "",
+      showError: false,
+      isOpenDialog: false,
+      otp: "",
+      email: ""
+    };
+
+    this.handleOtpSubmit = this.handleOtpSubmit.bind(this);
+    this.onChangeOTP = this.onChangeOTP.bind(this);
+
+  }
 
   handleSubmitForm = e => {
     // e.preventDefault();
@@ -28,24 +44,34 @@ class RegistrationForm extends React.Component {
         e.password,
         e.phone_number
       );
+      this.setState({
+        email: e.email
+      })
       //     // this.props.history.push("/");
       //   }
     }
   };
 
-  handleConfirmBlur = e => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
+  handleOtpSubmit = e => {
+    // e.preventDefault();
 
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
+    console.log(this.state.otp);
+    // return
+    if (this.state.otp && this.state.otp.length == 6) {
+      let data = {
+        email: this.state.email,
+        otp: this.state.otp
+      }
+      this.props.onOTPSubmit(
+        data
+      );
     }
-  };
+  }
+
+  onChangeOTP(e) {
+    e.preventDefault();
+    this.setState({ otp: e.target.value })
+  }
 
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form;
@@ -62,33 +88,37 @@ class RegistrationForm extends React.Component {
     return ''
   }
 
-  renderField = ({ input, label, name, type, meta }) => {
+  renderField = ({ input, label, name, type, meta, value }) => {
     return (<div>
       <label>{label}</label>
       <div className='form-group'>
-        <input {...input} type={type} className={meta.touched && meta.error ? 'is-invalid form-control' : 'form-control'} />
+        <input {...input} type={type} className={meta.touched && meta.error ? 'is-invalid form-control' : 'form-control'} value={value} />
         {this.renderError(meta)}
       </div>
     </div>
     )
   }
   componentWillReceiveProps(nextProps) {
-
+    // console.log(this.props, this.props.isVerificationSuccess, nextProps.isVerificationSuccess, nextProps);
     // const { clearError } = this.props
-    if (this.props.error ) {
-      this.setState({error: this.props.error, showError: true })
+    if (nextProps.successMessage) {
+      this.setState({ error: this.props.successMessage, isOpenDialog: true })
       // clearError();
-    //   this.props.getBrand()
+      //   this.props.getBrand()
+      // console.log(this.state.isOpenDialog);
+
     }
+    if (nextProps.isVerificationSuccess) {
+      this.props.history.push("/login");
+    }
+
   }
-  
+
   handleRequestClose = () => {
     this.setState({
-       addSnackbar: false,
-       sOpen: false,
-       error: ""
+      isOpenDialog: false
     })
- }
+  }
 
 
 
@@ -98,60 +128,109 @@ class RegistrationForm extends React.Component {
     return (
       <div>
 
-      <form onSubmit={handleSubmit(this.handleSubmitForm)}>
-        <div>
-       
-          <Field
-            name="first_name"
-            component={this.renderField}
-            label="First Name"
-            type="name" required="true"
+        <form onSubmit={handleSubmit(this.handleSubmitForm)}>
+          <div>
+
+            <Field
+              name="first_name"
+              component={this.renderField}
+              label="First Name"
+              type="name" required="true"
             />
 
-          <Field
-            name="email"
-            component={this.renderField}
-            label="Email" validate={[emailFieldValidation, Required]}
-            type="email"
+            <Field
+              name="email"
+              component={this.renderField}
+              label="Email" validate={[emailFieldValidation, Required]}
+              type="email"
             />
-          <Field
-            name="password"
-            component={this.renderField}
-            label="Password"
-            type="password"
-          />
-          <Field
-            name="phone_number" validate={phoneNumberPattern}
-            component={this.renderField}
-            label="Phone"
-            type="text"
+            <Field
+              name="password"
+              component={this.renderField}
+              label="Password"
+              type="password"
+            />
+            <Field
+              name="phone_number" validate={phoneNumberPattern}
+              component={this.renderField}
+              label="Phone"
+              type="text"
             />
 
 
 
-            </div>
+          </div>
 
-            <Button
-              type="primary" className="btn btn-primary"
-              htmlType="submit"
-              style={{ marginRight: "10px" }}
-              >
-              Signup
+          <Button
+            className="btn btn-primary"
+            type="submit"
+            style={{ marginRight: "10px" }}
+          >
+            Signup
               </Button>
               Or
             <NavLink style={{ marginRight: "10px" }} to="/login/">
-              login
+            login
               </NavLink>
-            {/* </FormItem> */}
-          </form>
-          
-          {
-            this.props.error ? <div  style={{textAlign:'center'}} >
-              {this.props.error}
-            </div> : ""
-          }
-          
-        </div>
+          {/* </FormItem> */}
+        </form>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.props.error ? true : false}
+          autoHideDuration={4000}
+          message={this.props.error}
+
+        />
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.props.successMessage ? true : false}
+          autoHideDuration={4000}
+          message={this.props.successMessage}
+
+        />
+        {
+          this.props.successMessage ? <div style={{ textAlign: 'center' }} >
+            {this.props.successMessage}
+          </div> : ""
+        }
+
+        <Dialog
+          open={this.state.isOpenDialog}
+          onClose={this.handleRequestClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Enter OTP </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Field
+                name="otp"
+                component={this.renderField}
+                onChange={this.onChangeOTP}
+                label="OTP"
+                type="text" required="true"
+              />
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleRequestClose} color="primary">
+              Cancel
+          </Button>
+            <Button onClick={this.handleOtpSubmit} color="primary" autoFocus>
+              Submit
+          </Button>
+          </DialogActions>
+        </Dialog>
+
+
+      </div>
     );
   }
 }
@@ -161,7 +240,10 @@ const WrappedRegistrationForm = Form.create()(RegistrationForm);
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isSignupSuccess: state.auth.isSignupSuccess,
+    successMessage: state.auth.successMessage,
+    isVerificationSuccess: state.auth.isVerificationSuccess
   };
 };
 
@@ -177,18 +259,22 @@ const validate = val => {
   if (!val.password) {
     errors.password = "Password is required";
   }
- 
+
 
   return errors;
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (username, email, password1, password2, is_student) =>
+    onAuth: (username, email, password1, password2, val) =>
       dispatch(
-        actions.authSignup(username, email, password1, password2, is_student)
+        actions.authSignup(username, email, password1, password2, val)
       ),
-    clearError:() =>{
+    onOTPSubmit: (data) =>
+      dispatch(
+        actions.signupOPTVerify(data)
+      ),
+    clearError: () => {
       // dispatch(
       //   actions.clearError()
       // )

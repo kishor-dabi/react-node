@@ -34,6 +34,11 @@ class NormalLoginForm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
+    if (nextProps.successMessage ) {
+      // this.setState({error: this.props.successMessage, isOpenDialog: true })
+     
+     
+    }
   }
 
 
