@@ -82,7 +82,7 @@ app.use((req, res, next) => {
         token = token ? token.split(" ") : [];
         // console.log(token , "-- token");
         // if (token[0].toLocaleLowerCase() == 'auth') {
-            // if (req.path == '/api/signup' || req.path == '/api/login' || req.path == '/api/verify-signup-otp' || req.path == '/api/forgot-password' || req.path == '/api/resend-otp' || req.path == '/api/verify-otp' || req.path == '/api/reset-password' || req.path == "/api/policy/terms-and-condition" || req.path == "/api/admin/create" || req.path == "/api/admin/login" || req.path == "/api/check-version") {
+            // if (req.path == '/api/signup' || req.path == '/api/login' || req.path == '/api/verify-signup-otp') {
             //     next();
             // } 
         //     else {
@@ -92,7 +92,7 @@ app.use((req, res, next) => {
         // else 
         if (token[0].toLocaleLowerCase() == 'bearer' && token[1]) {
             jwt.verify(token[1], config.jwt, async function(err, decoded) {
-                console.log(decoded) // bar
+                // console.log(decoded) // bar
                 if (decoded) {
 
                     let userDevice = await db.Token.findOne({

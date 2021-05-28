@@ -91,7 +91,11 @@ const userList = async(req, res) => {
     let tokenUserData = tokenData.decoded ? tokenData.decoded.data : null;
 
     [error, userList] = await to(models.User.findAll({
-       
+       where:{
+           user_type:{
+               [Op.gte]:tokenUserData.user_type
+           }
+       }
     }));
 
 

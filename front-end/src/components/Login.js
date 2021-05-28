@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
 import { Field, reduxForm } from 'redux-form'
 import { Redirect } from "react-router-dom";
-import { TextField } from "@material-ui/core"
+import { CircularProgress, TextField } from "@material-ui/core"
 // const FormItem = Form.Item;
 // const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -94,8 +94,7 @@ class NormalLoginForm extends React.Component {
         <div className="col-sm-8 col-sm offset-2">
           {errorMessage}
           {this.props.loading ? (
-
-            'Loading...'
+            <CircularProgress />
           ) : (
               <div className="form-group">
                 {/* <Form onSubmit={this.handleSubmit} className="login-form">

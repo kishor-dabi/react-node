@@ -11,7 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Snackbar } from "@material-ui/core";
+import { CircularProgress, Snackbar } from "@material-ui/core";
 // const FormItem = Form.Item;
 // const Option = Select.Option;
 
@@ -109,7 +109,9 @@ class RegistrationForm extends React.Component {
 
     }
     if (nextProps.isVerificationSuccess) {
-      this.props.history.push("/login");
+      setTimeout(() => {
+        this.props.history.push("/login");
+      }, 2000);
     }
 
   }
@@ -128,13 +130,17 @@ class RegistrationForm extends React.Component {
     return (
       <div>
 
+        {
+          this.props.loading ? <CircularProgress /> : ""
+        }
+
         <form onSubmit={handleSubmit(this.handleSubmitForm)}>
           <div>
 
             <Field
               name="first_name"
               component={this.renderField}
-              label="First Name"
+              label="Full Name"
               type="name" required="true"
             />
 
@@ -166,9 +172,9 @@ class RegistrationForm extends React.Component {
             type="submit"
             style={{ marginRight: "10px" }}
           >
-            Signup
+            Signup 
               </Button>
-              Or
+              Or 
             <NavLink style={{ marginRight: "10px" }} to="/login/">
             login
               </NavLink>

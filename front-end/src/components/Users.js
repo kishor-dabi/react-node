@@ -90,12 +90,12 @@ class Users extends React.PureComponent {
                     <div>
                         <h3 style={{ margin: "16px 0" }}>User List</h3>
 
-
+{/* 
 
                         <List className="list">
                             {showItemRecords}
                         </List>
-
+ */}
 
 
                         <div style={{ height: 400, width: '100%' }}>
